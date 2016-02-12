@@ -118,7 +118,7 @@ cache:
 
 before_install:
 # submodules
-- sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
+- sed 's/git@github.com:/https:\/\/github.com\//' .gitmodules > .gitmodules
 - git submodule update --init --recursive
 
 - sudo pip install cpp-coveralls --use-mirrors
