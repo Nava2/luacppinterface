@@ -4,10 +4,13 @@
 #include <functional>
 #include "luafunctionbase.h"
 
-template<typename T>
+template <typename T>
 std::shared_ptr<T> LuaNoDestructor(T* obj)
 {
-	return std::shared_ptr<T>(obj, [](T*){});
+    return std::shared_ptr<T>(obj,
+                              [](T*)
+                              {
+                              });
 }
 
 #include "luageneralgenericfunctions.h"

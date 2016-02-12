@@ -8,15 +8,15 @@
 class LuaCoroutine : public LuaReference
 {
 public:
-	LuaCoroutine(std::shared_ptr<lua_State> state, int index);
+    LuaCoroutine(std::shared_ptr<lua_State> state, int index);
 
-	// run a script
-	std::string RunScript(std::string script);
+    // run a script
+    std::string RunScript(std::string script);
 
-	// resume the yielded coroutine
-	std::string Resume();
+    // resume the yielded coroutine
+    std::string Resume();
 
-	bool CanResume() const;
+    bool CanResume() const;
 };
 
 #endif // LUACOROUTINE_H
