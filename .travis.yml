@@ -1,20 +1,138 @@
 language: cpp
-compiler:
-- gcc
-- clang
 
-os:
-- linux
-- osx
+matrix:
+  include: 
+    - os: linux
+      env: COMPILER=g++-4.9 CMAKE_BUILD_TYPE=Release
+      compiler: gcc
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test # Required for cmake
+          - george-edison55-precise-backports
+          packages:
+          - gcc-4.9
+          - g++-4.9
+          - cmake
+          - cmake-data    
+
+    - os: linux
+      env: COMPILER=clang++-3.7 CMAKE_BUILD_TYPE=Release
+      compiler: clang
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test # Required for cmake
+          - llvm-toolchain-precise-3.7
+          - george-edison55-precise-backports
+          packages:
+          - clang-3.7
+          - cmake
+          - cmake-data      
+
+    # Mac OSX
+    - os: osx
+      compiler: clang
+      env: COMPILER=appleclang CMAKE_BUILD_TYPE=Release 
+
+    # gcc-5
+    - os: linux
+      env: COMPILER=g++-5 CMAKE_BUILD_TYPE=Release
+      compiler: gcc
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test # Required for cmake
+          - george-edison55-precise-backports
+          packages:
+          - gcc-5
+          - g++-5
+          - cmake
+          - cmake-data   
+
+    # Debug builds:  
+    - os: linux
+      env: COMPILER=g++-4.9 CMAKE_BUILD_TYPE=Debug
+      compiler: gcc
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test # Required for cmake
+          - george-edison55-precise-backports
+          packages:
+          - gcc-4.9
+          - g++-4.9
+          - cmake
+          - cmake-data  
+
+    - os: linux
+      env: COMPILER=clang++-3.7 CMAKE_BUILD_TYPE=Debug
+      compiler: clang
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test # Required for cmake
+          - llvm-toolchain-precise-3.7
+          - george-edison55-precise-backports
+          packages:
+          - clang-3.7
+          - cmake
+          - cmake-data 
+
+  # Possible failure targets:
+    # Travis doesn't support gcc-6 yet :(
+    # - os: linux
+    #   env: QT_BASE=55 COMPILER=g++-6 CMAKE_BUILD_TYPE=Release
+    #   compiler: gcc
+    #   addons:
+    #     apt:
+    #       sources:
+    #       - ubuntu-toolchain-r-test # Required for cmake
+    #       - george-edison55-precise-backports
+    #       packages:
+    #       - gcc-6
+    #       - g++-6
+    #       - cmake
+    #       - cmake-data 
+
+    # Test using gcc
+    - os: osx
+      compiler: gcc
+      env: COMPILER=g++-4.9 CMAKE_BUILD_TYPE=Release
+
+    - os: osx
+      compiler: gcc
+      env: COMPILER=g++-5 CMAKE_BUILD_TYPE=Release 
+
+  allow_failures:
+    - os: osx
+      compiler: gcc
+
+cache:
+  directories:
+    - $HOME/.ccache
 
 before_install:
 - sudo pip install cpp-coveralls --use-mirrors
+- source ./install.deps.sh
+- export_compiler_vars
 
 script: 
+- |
+  echo "Configuration info:"
+  cmake --version
+  $CC --version
+  $CXX --version
+
 - mkdir build; pushd build
-- cmake .. -DVERBOSE=1
+- cmake .. -DVERBOSE=1 -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
 - make -j2 tests
 
 after_success:
   - coveralls --exclude tests
+
+notifications:
+    email:
+        on_success: change
+        on_failure: change
 
