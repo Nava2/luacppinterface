@@ -4,13 +4,27 @@ project(luacpp)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 include(cmake/common.cmake)
 
-compiler_info()
-
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
-option(LUACPP_TEST "Build LuaCpp's tests" ON)
+compiler_info()
+
+option(LUACPP_TEST "Build LuaCpp's tests"               ON)
+option(USE_CCACHE  "Use `ccache` for build caching"     ON)
+
+if(USE_CCACHE)
+    find_program(CCACHE_FOUND ccache)
+
+    if (CCACHE_FOUND)
+        if(VERBOSE)
+            message(STATUS "Using ccache")
+        endif(VERBOSE)
+    
+        set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+        set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache) 
+    endif(CCACHE_FOUND)
+endif(USE_CCACHE)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 

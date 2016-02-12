@@ -1,13 +1,20 @@
 language: cpp
 compiler:
-  - gcc
-  - clang
+- gcc
+- clang
+
+os:
+- linux
+- osx
 
 before_install:
-  - sudo pip install cpp-coveralls --use-mirrors
+- sudo pip install cpp-coveralls --use-mirrors
 
-script: ./build-travis.sh
+script: 
+- mkdir build; pushd build
+- cmake .. -DVERBOSE=1
+- make -j2 tests
 
 after_success:
-  - coveralls --exclude boost --exclude tests
+  - coveralls --exclude tests
 

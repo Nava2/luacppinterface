@@ -2,7 +2,7 @@
 include_directories(${CMAKE_SOURCE_DIR}/LuaCppInterface)
 include_directories(SYSTEM ${LUACPP_SYSTEM_INCLUDE_DIRS})
 
-set(tests   luacpp.cpp
+set(tests   testluacpp.cpp
             testcreate.cpp
             testfunction.cpp
             testfunctionparams.cpp

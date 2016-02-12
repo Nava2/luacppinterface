@@ -1,5 +1,7 @@
 #include <iostream>
 #include <sstream>
+#include <assert.h>
+
 #include "luacppinterface.h"
 
 void m()
@@ -130,6 +132,7 @@ int main()
 
 	auto absolute = lua.CreateFunction<int(int)>((int(*)(int))abs);
 	int magnitude = absolute.Invoke(-5);
+	assert(magnitude == 5);
 
 	auto afunc = lua.CreateFunction<void()>([&]()
 	{
@@ -231,15 +234,18 @@ int main()
 
 	auto result = meow.Invoke(params);
 	int big = result.Get<int>("big");
+	assert(big == 12 /* x.a */ + 15 /* a.big */);
 
 	auto onetwofour = global.Get< LuaFunction<int()> >("onetwofour");
 	int res = onetwofour.Invoke();
+	assert(res == 124);
 
 	auto getmeow = global.Get< LuaFunction<LuaFunction< LuaTable(LuaTable) >() > >("getmeow");
 	auto fmeow = getmeow.Invoke();
 	auto fres = fmeow.Invoke(params);
 
 	auto number = fres.Get<int>("big");
+	assert(number == 12 /* x.a */ + big /* a.big (it was a ref) */);
 
 	Lua luaInstance;
 	auto globalTable = luaInstance.GetGlobalEnvironment();
@@ -327,9 +333,9 @@ int main()
 	//l3.RunScript("a = {'ss', 'bb'}");
 
 	auto resstr = ss.str();
-	if (resstr.compare("This is hello kitty island adventure 1 2 3!") == 0)
+	if (resstr.compare("This is hello kitty island adventure 1 2 3!") != 0)
 	{
-		int a =0;
+		return 1;
 	}
 
 

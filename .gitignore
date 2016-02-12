@@ -1,4 +1,5 @@
-build/
+*build*/
+*.user
 
 .DS_Store
 *.log

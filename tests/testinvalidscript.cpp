@@ -11,8 +11,7 @@ int main()
 	
 	// Use it in a script!
 	std::string result = lua.RunScript("g % 5 lalala meow");
-
-	if ("Error: [string \"g % 5 lalala meow\"]:1: '=' expected near '%'\n" == result)
+    if ("Error: [string \"g % 5 lalala meow\"]:1: syntax error near '%'\n" == result)
 	{
 		return 0;
 	}
