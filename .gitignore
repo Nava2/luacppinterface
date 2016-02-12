@@ -1,6 +1,8 @@
 *build*/
 *.user
 
+*.kdev4
+
 .DS_Store
 *.log
 *.in

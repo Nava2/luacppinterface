@@ -1,5 +1,9 @@
 language: cpp
 
+git:
+  depth: 5
+  submodules: false 
+
 matrix:
   include: 
     - os: linux
@@ -113,6 +117,10 @@ cache:
     - $HOME/.ccache
 
 before_install:
+# submodules
+- sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
+- git submodule update --init --recursive
+
 - sudo pip install cpp-coveralls --use-mirrors
 - source ./install.deps.sh
 - export_compiler_vars
