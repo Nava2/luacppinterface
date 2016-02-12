@@ -9,7 +9,7 @@ init:
 
 install:
 # Use HTTPs for github  
-- ps: cat .gitmodules | %{$_ -replace "git@github.com:","https:\/\/github.com\/"} > .gitmodules
+- ps: cat .gitmodules | %{$_ -replace "git@github\\.com:","https://github.com/"} > .gitmodules
 - ps: git submodule update --init --recursive
 
 build_script:
